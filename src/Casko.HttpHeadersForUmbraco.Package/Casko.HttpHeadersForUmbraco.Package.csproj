@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Product>Casko.HttpHeadersForUmbraco</Product>
+    <PackageId>Casko.HttpHeadersForUmbraco</PackageId>
+    <Title>Http Headers for Umbraco</Title>
+    <Description>Http Headers for Umbraco publishes a host-aware HTTP-headers middleware that apply headers from configuration.</Description>
+    <PackageTags>http headers;security headers;security</PackageTags>
+    <Authors>Casper Korsgaard</Authors>
+    <Copyright>$([System.DateTime]::UtcNow.ToString(`yyyy`)) © Casper Korsgaard</Copyright>
+    <PackageProjectUrl>https://github.com/hallojoe/http-headers-for-umbraco</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hallojoe/http-headers-for-umbraco</RepositoryUrl>
+    <PackageReadmeFile>README_nuget.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Umbraco.Cms.Web.Website" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\docs\README_nuget.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
