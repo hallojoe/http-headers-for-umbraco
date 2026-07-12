@@ -10,8 +10,6 @@ public sealed class HttpResponseHeadersOptions
     public bool Enabled { get; init; }
 
     public Dictionary<string, HttpResponseHostOptions> Hosts { get; init; } = new(StringComparer.OrdinalIgnoreCase);
-
-    public Dictionary<string, HttpResponseHeaderProfileOptions> Profiles { get; init; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
 /// <summary>
@@ -25,20 +23,5 @@ public sealed class HttpResponseHostOptions
 
     public string[] DenyPaths { get; init; } = [];
 
-    public string[] Profiles { get; init; } = [];
-}
-
-/// <summary>
-/// Configuration for a header profile.
-/// </summary>
-public sealed class HttpResponseHeaderProfileOptions
-{
-    public bool Enabled { get; init; }
-
-    public string[] Remove { get; init; } = [];
-
-    /// <summary>
-    /// Headers to add. Values may be either a string or a string[] (e.g. Content-Security-Policy).
-    /// </summary>
-    public Dictionary<string, string[]> Add { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public string[] Files { get; init; } = [];
 }

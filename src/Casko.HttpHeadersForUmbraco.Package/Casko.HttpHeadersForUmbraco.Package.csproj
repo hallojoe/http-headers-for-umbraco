@@ -9,7 +9,7 @@
     <Product>Casko.HttpHeadersForUmbraco</Product>
     <PackageId>Casko.HttpHeadersForUmbraco</PackageId>
     <Title>Http Headers for Umbraco</Title>
-    <Description>Http Headers for Umbraco publishes a host-aware HTTP-headers middleware that apply headers from configuration.</Description>
+    <Description>Http Headers for Umbraco publishes a host-aware HTTP-headers middleware that reads header fragments from files on disk.</Description>
     <PackageTags>http headers;security headers;security</PackageTags>
     <Authors>Casper Korsgaard</Authors>
     <Copyright>$([System.DateTime]::UtcNow.ToString(`yyyy`)) © Casper Korsgaard</Copyright>
