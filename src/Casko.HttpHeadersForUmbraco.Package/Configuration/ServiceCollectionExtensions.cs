@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Web.Common.ApplicationBuilder;
+using Umbraco.Extensions;
 
 namespace Casko.HttpHeadersForUmbraco.Package.Configuration;
 
