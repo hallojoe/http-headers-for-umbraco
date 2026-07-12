@@ -46,6 +46,29 @@ public sealed class HttpResponseHeadersOptionsValidator(
             }
         }
 
+        if (options.XRobotsTag.Enabled)
+        {
+            if (string.IsNullOrWhiteSpace(options.XRobotsTag.HeaderName))
+            {
+                failures.Add("HttpResponseHeaders:XRobotsTag:HeaderName must not be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.XRobotsTag.HeaderValue))
+            {
+                failures.Add("HttpResponseHeaders:XRobotsTag:HeaderValue must not be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.XRobotsTag.NoIndexPropertyAlias))
+            {
+                failures.Add("HttpResponseHeaders:XRobotsTag:NoIndexPropertyAlias must not be empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.XRobotsTag.NoIndexPropertyValue))
+            {
+                failures.Add("HttpResponseHeaders:XRobotsTag:NoIndexPropertyValue must not be empty.");
+            }
+        }
+
         return failures.Count == 0
             ? ValidateOptionsResult.Success
             : ValidateOptionsResult.Fail(failures);

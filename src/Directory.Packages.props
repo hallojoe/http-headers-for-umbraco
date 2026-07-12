@@ -9,6 +9,10 @@
     <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="NUnit" Version="3.14.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageVersion Include="Umbraco.Cms" Version="17.*" />
     <PackageVersion Include="Umbraco.Cms.Web.Website" Version="17.*" />
+    <PackageVersion Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="17.*" />
+    <PackageVersion Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+    <PackageVersion Include="uSync" Version="17.3.5" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="Casko.HttpHeadersForUmbraco.Package/Casko.HttpHeadersForUmbraco.Package.csproj" />
   <Project Path="Casko.HttpHeadersForUmbraco.Tests/Casko.HttpHeadersForUmbraco.Tests.csproj" />
+  <Project Path="Casko.HttpHeadersForUmbraco.TestSite/Casko.HttpHeadersForUmbraco.TestSite.csproj" />
 </Solution>
