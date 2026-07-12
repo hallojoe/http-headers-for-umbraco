@@ -11,5 +11,5 @@ public interface IHttpResponseHeaderApplicator
     /// Applies configured header changes to the current response.
     /// </summary>
     /// <param name="httpContext">The current HTTP context.</param>
-    void Apply(HttpContext httpContext);
+    Task ApplyAsync(HttpContext httpContext, CancellationToken cancellationToken = default);
 }
