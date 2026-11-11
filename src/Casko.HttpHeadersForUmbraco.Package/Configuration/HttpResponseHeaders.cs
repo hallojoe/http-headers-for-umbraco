@@ -11,11 +11,32 @@ public sealed class HttpResponseHeadersOptions
 
     public Dictionary<string, HttpResponseHostOptions> Hosts { get; init; } = new(StringComparer.OrdinalIgnoreCase);
 
-    public Dictionary<string, HttpResponseHeaderProfileOptions> Profiles { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HttpResponseHeadersXRobotsTagOptions XRobotsTag { get; init; } = new();
+    public HttpResponseHeadersCanonicalLinkOptions CanonicalLink { get; init; } = new();
+}
+
+public sealed class HttpResponseHeadersCanonicalLinkOptions
+{
+    public bool Enabled { get; init; }
+    public string? PropertyAlias { get; init; }
+}
+
+public sealed class HttpResponseHeadersXRobotsTagOptions
+{
+    public bool Enabled { get; init; }
+
+    public string HeaderName { get; init; } = "X-Robots-Tag";
+
+    public string HeaderValue { get; init; } = "noindex,nofollow";
+
+    public string NoIndexPropertyAlias { get; init; } = "noIndex";
+
+    public string NoIndexPropertyValue { get; init; } = "1";
+
 }
 
 /// <summary>
-/// Configuration for a host.
+/// Configuration for a host.   
 /// </summary>
 public sealed class HttpResponseHostOptions
 {
@@ -25,20 +46,5 @@ public sealed class HttpResponseHostOptions
 
     public string[] DenyPaths { get; init; } = [];
 
-    public string[] Profiles { get; init; } = [];
-}
-
-/// <summary>
-/// Configuration for a header profile.
-/// </summary>
-public sealed class HttpResponseHeaderProfileOptions
-{
-    public bool Enabled { get; init; }
-
-    public string[] Remove { get; init; } = [];
-
-    /// <summary>
-    /// Headers to add. Values may be either a string or a string[] (e.g. Content-Security-Policy).
-    /// </summary>
-    public Dictionary<string, string[]> Add { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public string[] Files { get; init; } = [];
 }
