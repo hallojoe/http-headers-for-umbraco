@@ -7,12 +7,51 @@ namespace Casko.HttpHeadersForUmbraco.Tests.Unit;
 [TestFixture]
 public sealed class ContentRootHttpResponseHeadersBindingFileResolverTests
 {
+    private readonly List<string> _directories = [];
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach (var path in _directories)
+        {
+            Directory.Delete(path, recursive: true);
+        }
+        _directories.Clear();
+    }
+
     [Test]
     public void ResolvePath_WhenPathEscapesContentRoot_Throws()
     {
         var sut = CreateSut(CreateTempDirectory());
 
-        Assert.Throws<InvalidOperationException>(() => sut.ResolvePath("..\\outside.http"));
+        Assert.Throws<InvalidOperationException>(() => sut.ResolvePath(Path.Combine("..", "outside.http")));
+    }
+
+    [Test]
+    public void ResolvePath_WhenSiblingSharesRootPrefix_Throws()
+    {
+        var parent = CreateTempDirectory();
+        var sut = CreateSut(Path.Combine(parent, "site"));
+
+        Assert.Throws<InvalidOperationException>(() => sut.ResolvePath(Path.Combine("..", "site-other", "outside.http")));
+    }
+
+    [Test]
+    public void ReadAsync_WhenSiblingDiffersOnlyByCase_ThrowsOnCaseSensitiveFileSystem()
+    {
+        var parent = CreateTempDirectory();
+        var root = Path.Combine(parent, "site");
+        var sibling = Path.Combine(parent, "SITE");
+        Directory.CreateDirectory(root);
+        if (Directory.Exists(sibling))
+        {
+            Assert.Ignore("This test requires a case-sensitive file system.");
+        }
+        Directory.CreateDirectory(sibling);
+        File.WriteAllText(Path.Combine(sibling, "outside.http"), "X-Outside: yes");
+        var sut = CreateSut(root);
+
+        Assert.ThrowsAsync<InvalidOperationException>(() => sut.ReadAsync(Path.Combine("..", "SITE", "outside.http")));
     }
 
     [Test]
@@ -36,10 +75,11 @@ public sealed class ContentRootHttpResponseHeadersBindingFileResolverTests
         return new ContentRootHttpResponseHeadersBindingFileResolver(hostEnvironment);
     }
 
-    private static string CreateTempDirectory()
+    private string CreateTempDirectory()
     {
         var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(path);
+        _directories.Add(path);
         return path;
     }
 }

@@ -20,7 +20,10 @@ public sealed class ContentRootHttpResponseHeadersBindingFileResolver(
                 ? candidatePath
                 : Path.Combine(_contentRootPath, candidatePath));
 
-        if (!fullPath.StartsWith(_contentRootPath, StringComparison.OrdinalIgnoreCase))
+        var comparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        if (!fullPath.StartsWith(_contentRootPath, comparison))
         {
             throw new InvalidOperationException(
                 $"HttpResponseHeaders binding file '{candidatePath}' must resolve inside the content root '{_contentRootPath}'.");

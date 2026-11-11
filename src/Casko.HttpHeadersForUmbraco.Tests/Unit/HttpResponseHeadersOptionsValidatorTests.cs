@@ -8,6 +8,18 @@ namespace Casko.HttpHeadersForUmbraco.Tests.Unit;
 [TestFixture]
 public sealed class HttpResponseHeadersOptionsValidatorTests
 {
+    private readonly List<string> _directories = [];
+
+    [TearDown]
+    public void TearDown()
+    {
+        foreach (var path in _directories)
+        {
+            Directory.Delete(path, recursive: true);
+        }
+        _directories.Clear();
+    }
+
     [Test]
     public void Validate_WhenFileIsMissing_ReturnsFailure()
     {
@@ -31,11 +43,15 @@ public sealed class HttpResponseHeadersOptionsValidatorTests
     [Test]
     public void Validate_WhenFileEscapesContentRoot_ReturnsFailure()
     {
-        var sut = CreateSut(CreateTempDirectory());
+        var root = CreateTempDirectory();
+        var outsideFile = Path.Combine(CreateTempDirectory(), "outside.http");
+        File.WriteAllText(outsideFile, "X-Outside: yes");
+        var sut = CreateSut(root);
 
-        var result = sut.Validate(null, CreateOptions(["..\\outside.http"]));
+        var result = sut.Validate(null, CreateOptions([Path.GetRelativePath(root, outsideFile)]));
 
         Assert.That(result.Failed, Is.True);
+        Assert.That(result.FailureMessage, Does.Contain("must resolve inside the content root"));
     }
 
     private static HttpResponseHeadersOptionsValidator CreateSut(string rootPath)
@@ -62,10 +78,11 @@ public sealed class HttpResponseHeadersOptionsValidatorTests
         };
     }
 
-    private static string CreateTempDirectory()
+    private string CreateTempDirectory()
     {
         var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(path);
+        _directories.Add(path);
         return path;
     }
 }

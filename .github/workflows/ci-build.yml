@@ -14,12 +14,15 @@ permissions:
 
 env:
   DOTNET_VERSION: 10.0.x
-  NODE_VERSION: 22
   PACKAGE_PROJECT: src/Casko.HttpHeadersForUmbraco.Package/Casko.HttpHeadersForUmbraco.Package.csproj
+  TEST_PROJECT: src/Casko.HttpHeadersForUmbraco.Tests/Casko.HttpHeadersForUmbraco.Tests.csproj
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -30,12 +33,11 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore package project
-        run: dotnet restore "${{ env.PACKAGE_PROJECT }}"
+      - name: Restore package and tests
+        run: dotnet restore "${{ env.TEST_PROJECT }}"
 
-      - name: Build package project
-        run: dotnet build "${{ env.PACKAGE_PROJECT }}" --configuration Release --no-restore
+      - name: Run tests
+        run: dotnet test "${{ env.TEST_PROJECT }}" --configuration Release --no-restore
 
-
-
-
+      - name: Validate NuGet package
+        run: dotnet pack "${{ env.PACKAGE_PROJECT }}" --configuration Release --no-build --no-restore --output ./artifacts

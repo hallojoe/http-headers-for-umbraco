@@ -15,7 +15,7 @@
     <Copyright>$([System.DateTime]::UtcNow.ToString(`yyyy`)) © Casper Korsgaard</Copyright>
     <PackageProjectUrl>https://github.com/hallojoe/http-headers-for-umbraco</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hallojoe/http-headers-for-umbraco</RepositoryUrl>
-    <PackageReadmeFile>README_nuget.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -23,7 +23,7 @@
     <PackageReference Include="Umbraco.Cms.Web.Website" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\docs\README_nuget.md">
+    <None Include="..\..\docs\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
