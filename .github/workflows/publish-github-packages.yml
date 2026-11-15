@@ -12,6 +12,7 @@ permissions:
 env:
   DOTNET_VERSION: 10.0.x
   PROJECT_FILE: src/Casko.HttpHeadersForUmbraco.Package/Casko.HttpHeadersForUmbraco.Package.csproj
+  TEST_PROJECT: src/Casko.HttpHeadersForUmbraco.Tests/Casko.HttpHeadersForUmbraco.Tests.csproj
   GITHUB_PACKAGE_SOURCE: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
   NUGET_PACKAGE_SOURCE: https://api.nuget.org/v3/index.json
 
@@ -75,7 +76,10 @@ jobs:
           echo "Prerelease: $IS_PRERELEASE"
 
       - name: Restore
-        run: dotnet restore "${{ env.PROJECT_FILE }}"
+        run: dotnet restore "${{ env.TEST_PROJECT }}"
+
+      - name: Run tests
+        run: dotnet test "${{ env.TEST_PROJECT }}" --configuration Release --no-restore
 
       - name: Pack
         run: |

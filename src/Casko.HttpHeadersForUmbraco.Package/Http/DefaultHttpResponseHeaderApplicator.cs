@@ -2,19 +2,23 @@ using Casko.HttpHeadersForUmbraco.Package.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
+using Casko.HttpHeadersForUmbraco.Package.Services;
 
 namespace Casko.HttpHeadersForUmbraco.Package.Http;
 
 /// <inheritdoc />
-public sealed class DefaultHttpResponseHeaderApplicator(IOptions<HttpResponseHeadersOptions> options)
+public sealed class DefaultHttpResponseHeaderApplicator(
+    IOptions<HttpResponseHeadersOptions> options,
+    IHttpResponseHeadersFileLoader fileLoader)
     : IHttpResponseHeaderApplicator
 {
     private static readonly char[] PathTrimCharacters = [' ', '/'];
 
     /// <inheritdoc />
-    public void Apply(HttpContext httpContext)
+    public async Task ApplyAsync(HttpContext httpContext, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(httpContext);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var headerOptions = options.Value;
         if (!headerOptions.Enabled)
@@ -28,14 +32,13 @@ public sealed class DefaultHttpResponseHeaderApplicator(IOptions<HttpResponseHea
             return;
         }
 
-        foreach (var profileName in hostOptions.Profiles)
+        foreach (var filePath in Clean(hostOptions.Files))
         {
-            if (!headerOptions.Profiles.TryGetValue(profileName, out var profile) || !profile.Enabled)
+            var headers = await fileLoader.LoadAsync(filePath, cancellationToken);
+            foreach (var (headerName, value) in headers)
             {
-                continue;
+                httpContext.Response.Headers[headerName] = new StringValues(value);
             }
-
-            ApplyProfile(httpContext.Response.Headers, profile);
         }
     }
 
@@ -70,19 +73,6 @@ public sealed class DefaultHttpResponseHeaderApplicator(IOptions<HttpResponseHea
         return !hostOptions.DenyPaths.Any(denyPath => PathMatches(path, denyPath));
     }
 
-    private static void ApplyProfile(IHeaderDictionary responseHeaders, HttpResponseHeaderProfileOptions profile)
-    {
-        foreach (var (headerName, values) in profile.Add)
-        {
-            responseHeaders[headerName] = new StringValues(string.Join("", values));
-        }
-        
-        foreach (var headerName in profile.Remove)
-        {
-            responseHeaders.Remove(headerName);
-        }
-    }
-
     private static bool PathMatches(string requestPath, string configuredPath)
     {
         var normalizedConfiguredPath = NormalizePath(configuredPath);
@@ -108,5 +98,12 @@ public sealed class DefaultHttpResponseHeaderApplicator(IOptions<HttpResponseHea
         }
 
         return path.Trim(PathTrimCharacters);
+    }
+
+    private static IEnumerable<string> Clean(IEnumerable<string> values)
+    {
+        return values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim());
     }
 }

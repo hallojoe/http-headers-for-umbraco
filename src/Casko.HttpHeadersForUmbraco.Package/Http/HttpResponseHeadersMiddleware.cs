@@ -8,11 +8,10 @@ public sealed class HttpResponseHeadersMiddleware(
 {
     public async Task InvokeAsync(HttpContext context)
     {
-        context.Response.OnStarting(static state =>
+        context.Response.OnStarting(static async state =>
         {
             var (applicator, httpContext) = ((IHttpResponseHeaderApplicator Applicator, HttpContext HttpContext))state;
-            applicator.Apply(httpContext);
-            return Task.CompletedTask;
+            await applicator.ApplyAsync(httpContext);
         }, (httpResponseHeaderApplicator, context));
 
         await next(context);
